@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'pagee';
+    // MatPaginator Inputs
+    length = 100;
+    pageSize = 10;
+    pageSizeOptions: number[] = [5, 10, 25, 100];
+
+    // MatPaginator Output
+    pageEvent: PageEvent;
+
+    setPageSizeOptions = (setPageSizeOptionsInput: string) => {
+      if (setPageSizeOptionsInput) {
+        this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+      }
+    }
 }
