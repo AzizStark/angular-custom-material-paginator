@@ -7,7 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { PaginationDirective } from './pagination.directive';
-
+import { HttpClientModule } from '@angular/common/http';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,8 @@ import { PaginationDirective } from './pagination.directive';
     MatFormFieldModule,
     MatPaginatorModule,
     BrowserAnimationsModule,
+    HttpClientModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent],

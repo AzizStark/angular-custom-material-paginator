@@ -22,14 +22,14 @@ interface PageObject {
 @Directive({
   selector: '[appPagination]'
 })
-export class PaginationDirective {
-  private _currentPage = 1;
-  private _pageGapTxt2 = '..';
-  private _pageGapTxt = '...';
-  private _rangeStart;
-  private _rangeEnd;
-  private _buttons = [];
-  private _curPageObj: PageObject = {
+export class PaginationDirective implements AfterViewInit {
+  private currentPage = 1;
+  private pageGapTxt2 = '..';
+  private pageGapTxt = '•••';
+  private rangeStart;
+  private rangeEnd;
+  private buttons = [];
+  private curPageObj: PageObject = {
     length: 0,
     pageIndex: 0,
     pageSize: 0,
@@ -37,11 +37,11 @@ export class PaginationDirective {
   };
 
   @Input()
-  get showTotalPages(): number { return this._showTotalPages; }
+  get showTotalPages(): number { return this.showTotalPages1; }
   set showTotalPages(value: number) {
-    this._showTotalPages = value % 2 === 0 ? value + 1 : value;
+    this.showTotalPages1 = value % 2 === 0 ? value + 1 : value;
   }
-  private _showTotalPages = 2;
+  private showTotalPages1 = 3;
 
   constructor(
     @Host() @Self() @Optional() private readonly matPag: MatPaginator,
@@ -50,7 +50,9 @@ export class PaginationDirective {
   ) {
     // Sub to rerender buttons when next page and last page is used
     this.matPag.page.subscribe((v) => {
-      this.switchPage(v.pageIndex);
+      this.currentPage = v.pageIndex;
+      this.matPag.pageIndex = v.pageIndex;
+      this.initPageRange();
     });
   }
 
@@ -61,11 +63,11 @@ export class PaginationDirective {
     const nextPageNode = this.vr.element.nativeElement.querySelector(
       'button.mat-paginator-navigation-next'
     );
-    let prevButtonCount = this._buttons.length;
+    let prevButtonCount = this.buttons.length;
 
     // remove buttons before creating new ones
     if (prevButtonCount > 0) {
-      this._buttons.forEach(button => {
+      this.buttons.forEach(button => {
         this.ren.removeChild(actionContainer, button);
       });
       // Empty state array
@@ -73,7 +75,6 @@ export class PaginationDirective {
     }
     const pagecount = this.vr.element.nativeElement.childNodes[0].childNodes[0]
       .childNodes[1].childNodes[0];
-    console.log(pagecount);
     this.ren.setStyle(pagecount, 'white-space', 'nowrap');
 
     // 1initialize next page and last page buttons
@@ -111,12 +112,15 @@ export class PaginationDirective {
       this.createButton(0, this.matPag.pageIndex),
       nextPageNode
     );
-
+    const page = this.showTotalPages1 + 2;
     for (let i = 1; i < this.matPag.getNumberOfPages() - 1; i = i + 1) {
 
       if (
-        (i < this._showTotalPages && this._currentPage < this._showTotalPages && i > this._rangeStart) ||
-        (i >= this._rangeStart && i <= this._rangeEnd)
+        (i < page && this.currentPage < this.showTotalPages1)
+        ||
+        (i >= this.rangeStart && i <= this.rangeEnd)
+        ||
+        (this.currentPage > this.matPag.length / this.matPag.pageSize - page && i >= this.matPag.length / this.matPag.pageSize - page)
       ) {
         this.ren.insertBefore(
           actionContainer,
@@ -124,18 +128,18 @@ export class PaginationDirective {
           nextPageNode
         );
       } else {
-        if (i > this._rangeEnd && !dots) {
+        if (i > this.rangeEnd && !dots) {
           this.ren.insertBefore(
             actionContainer,
-            this.createButton(this._pageGapTxt, this.matPag.pageIndex),
+            this.createButton(this.pageGapTxt, this.matPag.pageIndex),
             nextPageNode
           );
           dots = true;
         }
-        if (i < this._rangeEnd && !dots2) {
+        if (i < this.rangeEnd && !dots2) {
           this.ren.insertBefore(
             actionContainer,
-            this.createButton(this._pageGapTxt2, this.matPag.pageIndex),
+            this.createButton(this.pageGapTxt2, this.matPag.pageIndex),
             nextPageNode
           );
           dots2 = true;
@@ -143,7 +147,7 @@ export class PaginationDirective {
       }
     }
 
-    if (this.matPag.getNumberOfPages() !== 1) {
+    if (this.matPag.getNumberOfPages() !== 1 && this.matPag.length !== 0) {
       this.ren.insertBefore(
         actionContainer,
         this.createButton(this.matPag.getNumberOfPages() - 1, this.matPag.pageIndex),
@@ -154,33 +158,40 @@ export class PaginationDirective {
 
   private createButton(i: any, pageIndex: number): any {
     const linkBtn: MatButton = this.ren.createElement('button');
-    this.ren.setStyle(linkBtn, 'border-radius', '4px');
-    this.ren.setStyle(linkBtn, 'border', 'none');
-    this.ren.setStyle(linkBtn, 'margin', '1%');
-    this.ren.setStyle(linkBtn, 'color', '#333333');
-    this.ren.setStyle(linkBtn, 'font-size', '14px');
-    this.ren.setStyle(linkBtn, 'min-width', '24px');
-    this.ren.setStyle(linkBtn, 'min-height', '24px');
-    this.ren.setStyle(linkBtn, 'padding', 'unset');
-    this.ren.setStyle(linkBtn, 'background-color', 'transparent');
+    this.ren.setAttribute(
+      linkBtn,
+      'style',
+      `color: #333333;
+       background: transparent;
+       border-radius: 4px;
+       border: none;
+       margin: 1%;
+       font-size: 14px;
+       min-width: 24px;
+       min-height: 24px;
+       max-height: 24px;
+       padding: unset`);
+    if (i === this.pageGapTxt || i === this.pageGapTxt2){
+      this.ren.setStyle(linkBtn, 'color', '#999999');
+    }
 
-    const pagingTxt = isNaN(i) ? this._pageGapTxt : +(i + 1);
+    const pagingTxt = isNaN(i) ? this.pageGapTxt : +(i + 1);
     const text = this.ren.createText(pagingTxt + '');
 
     this.ren.addClass(linkBtn, 'mat-custom-page');
-    // newIndex = this._curPageObj.pageIndex + this._showTotalPages;
+
     switch (i) {
       case pageIndex:
         this.ren.setAttribute(linkBtn, 'disabled', 'disabled');
         break;
-      case this._pageGapTxt:
+      case this.pageGapTxt:
         this.ren.listen(linkBtn, 'click', () => {
-          this.switchPage(this._currentPage + this._showTotalPages);
+          this.switchPage(this.currentPage + this.showTotalPages1);
         });
         break;
-      case this._pageGapTxt2:
+      case this.pageGapTxt2:
         this.ren.listen(linkBtn, 'click', () => {
-          this.switchPage(this._currentPage - this.showTotalPages);
+          this.switchPage(this.currentPage - this.showTotalPages);
         });
         break;
       default:
@@ -192,30 +203,34 @@ export class PaginationDirective {
 
     this.ren.appendChild(linkBtn, text);
     // Add button to private array for state
-    this._buttons.push(linkBtn);
+    this.buttons.push(linkBtn);
     return linkBtn;
   }
   // calculates the button range based on class input parameters and based on current page index value.
   // Used to render new buttons after event.
 
   private initPageRange(): void {
-    console.log(this._rangeStart, this._rangeEnd);
-    this._rangeStart = this._currentPage - this._showTotalPages / 2;
-    this._rangeEnd = this._currentPage + this._showTotalPages / 2;
-    console.log(this._rangeStart, this._rangeEnd);
+    this.rangeStart = this.currentPage - this.showTotalPages1 / 2;
+    this.rangeEnd = this.currentPage + this.showTotalPages1 / 2;
     this.buildPageNumbers();
   }
 
   private switchPage(i: number): void {
-    this._currentPage = i;
     this.matPag.pageIndex = i;
+    this.matPag.page.emit({
+      previousPageIndex: this.currentPage,
+      pageIndex: i,
+      pageSize: this.matPag.pageSize,
+      length: this.matPag.length
+    });
+    this.currentPage = i;
     this.initPageRange();
   }
 
   // Initialize default state after view init
-  public ngAfterViewInit() {
-    this._rangeStart = 0;
-    this._rangeEnd = this._showTotalPages - 1;
+  public ngAfterViewInit(): void {
+    this.rangeStart = 0;
+    this.rangeEnd = this.showTotalPages1 - 1;
     this.initPageRange();
   }
 }

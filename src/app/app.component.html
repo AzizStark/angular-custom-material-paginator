@@ -1,6 +1,23 @@
-<mat-paginator appPagination [length]="600"
-              [pageSize]="10"
-              [showTotalPages]="5"
-              [hidePageSize]='true'
-              style="display: flex">
-</mat-paginator>
+<table mat-table [dataSource]="tableData">
+    <ng-container matColumnDef="ID">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element._id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let element"> {{element.author}} </td>
+    </ng-container>
+    <ng-container matColumnDef="E-mail">
+        <th mat-header-cell *matHeaderCellDef> E-mail </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['ID', 'Author', 'E-mail']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['ID', 'Author', 'E-mail'];"></tr>
+</table>
+
+<div class="pg-container">
+    <mat-paginator appPagination [length]="200" [pageSize]="10" [hidePageSize]='true' style="display: flex"
+        (page)="onPageEvent($event)">
+    </mat-paginator>
+</div>
