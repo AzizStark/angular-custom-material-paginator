@@ -1,27 +1,19 @@
 import {
-  ElementRef,
   AfterViewInit,
   Directive,
   Host,
   Optional,
   Renderer2,
   Self,
-  ViewContainerRef,
-  Input
+  ViewContainerRef
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatButton } from '@angular/material/button';
 
-interface PageObject {
-  length: number;
-  pageIndex: number;
-  pageSize: number;
-  previousPageIndex: number;
-}
-
 @Directive({
   selector: '[appPagination]'
 })
+
 export class PaginationDirective implements AfterViewInit {
   private currentPage = 1;
   private pageGapTxt2 = '..';
@@ -29,18 +21,6 @@ export class PaginationDirective implements AfterViewInit {
   private rangeStart;
   private rangeEnd;
   private buttons = [];
-  private curPageObj: PageObject = {
-    length: 0,
-    pageIndex: 0,
-    pageSize: 0,
-    previousPageIndex: 0
-  };
-
-  @Input()
-  get showTotalPages(): number { return this.showTotalPages1; }
-  set showTotalPages(value: number) {
-    this.showTotalPages1 = value % 2 === 0 ? value + 1 : value;
-  }
   private showTotalPages1 = 3;
 
   constructor(
@@ -48,7 +28,7 @@ export class PaginationDirective implements AfterViewInit {
     private vr: ViewContainerRef,
     private ren: Renderer2
   ) {
-    // Sub to rerender buttons when next page and last page is used
+    // Subscribe to rerender buttons when next page and last page is used
     this.matPag.page.subscribe((v) => {
       this.currentPage = v.pageIndex;
       this.matPag.pageIndex = v.pageIndex;
@@ -75,9 +55,13 @@ export class PaginationDirective implements AfterViewInit {
     }
     const pagecount = this.vr.element.nativeElement.childNodes[0].childNodes[0]
       .childNodes[1].childNodes[0];
-    this.ren.setStyle(pagecount, 'white-space', 'nowrap');
+    const container = this.vr.element.nativeElement.childNodes[0].childNodes[0]
+      .childNodes[1];
 
-    // 1initialize next page and last page buttons
+    this.ren.setStyle(pagecount, 'white-space', 'nowrap');
+    this.ren.setStyle(container, 'justify-content', 'flex-end');
+
+    // Initialize next page and last page buttons
     if (prevButtonCount === 0) {
       const nodeArray = this.vr.element.nativeElement.childNodes[0].childNodes[0]
         .childNodes[1].childNodes;
@@ -87,14 +71,12 @@ export class PaginationDirective implements AfterViewInit {
           if (node.nodeName === 'BUTTON') {
             // Next Button styles
             if (node.innerHTML.length > 100 && node.disabled) {
-              this.ren.setStyle(node, 'color', '#999999');
-              this.ren.setStyle(node, 'margin', '.5%');
+              this.ren.setStyle(node, 'color', '#CCC');
             } else if (
               node.innerHTML.length > 100 &&
               !node.disabled
             ) {
               this.ren.setStyle(node, 'color', '#999999');
-              this.ren.setStyle(node, 'margin', '.5%');
             } else if (node.disabled) {
               this.ren.setStyle(node, 'background-color', '#007CBE');
               this.ren.setStyle(node, 'color', '#fff');
@@ -114,7 +96,6 @@ export class PaginationDirective implements AfterViewInit {
     );
     const page = this.showTotalPages1 + 2;
     for (let i = 1; i < this.matPag.getNumberOfPages() - 1; i = i + 1) {
-
       if (
         (i < page && this.currentPage < this.showTotalPages1)
         ||
@@ -171,7 +152,7 @@ export class PaginationDirective implements AfterViewInit {
        min-height: 24px;
        max-height: 24px;
        padding: unset`);
-    if (i === this.pageGapTxt || i === this.pageGapTxt2){
+    if (i === this.pageGapTxt || i === this.pageGapTxt2) {
       this.ren.setStyle(linkBtn, 'color', '#999999');
     }
 
@@ -191,7 +172,7 @@ export class PaginationDirective implements AfterViewInit {
         break;
       case this.pageGapTxt2:
         this.ren.listen(linkBtn, 'click', () => {
-          this.switchPage(this.currentPage - this.showTotalPages);
+          this.switchPage(this.currentPage - this.showTotalPages1);
         });
         break;
       default:
@@ -206,9 +187,10 @@ export class PaginationDirective implements AfterViewInit {
     this.buttons.push(linkBtn);
     return linkBtn;
   }
-  // calculates the button range based on class input parameters and based on current page index value.
-  // Used to render new buttons after event.
 
+  /**
+   * @description calculates the button range based on class input parameters and based on current page index value.
+   */
   private initPageRange(): void {
     this.rangeStart = this.currentPage - this.showTotalPages1 / 2;
     this.rangeEnd = this.currentPage + this.showTotalPages1 / 2;
@@ -227,7 +209,6 @@ export class PaginationDirective implements AfterViewInit {
     this.initPageRange();
   }
 
-  // Initialize default state after view init
   public ngAfterViewInit(): void {
     this.rangeStart = 0;
     this.rangeEnd = this.showTotalPages1 - 1;
