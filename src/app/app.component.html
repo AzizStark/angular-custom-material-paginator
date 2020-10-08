@@ -17,7 +17,8 @@
 </table>
 
 <div class="pg-container">
-    <mat-paginator appPagination [length]="200" [pageSize]="10" [hidePageSize]='true'
+    <mat-paginator appPagination [length]="this.paginationInfo?.length" [pageSize]="this.paginationInfo?.pageSize" [hidePageSize]='true'
         (page)="onPageEvent($event)">
     </mat-paginator>
+    <button (click)="getPageDetails()"> Get Page </button>
 </div>

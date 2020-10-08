@@ -1,4 +1,8 @@
 {
+    "pageSize": {
+        "length": 200,
+        "pageSize": 10
+    },
     "posts": [
         {
             "_id": 1,

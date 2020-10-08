@@ -1,4 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.custom-paginator-container {
+  justify-content: flex-end;
+}
+
+.custom-paginator-counter {
+  white-space: nowrap;
+}
+
+.custom-paginator-page {
+  border-radius: 4px;
+  border: none;
+  margin: 1%;
+  font-size: 14px;
+  min-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  padding: unset;
+}
+
+.custom-paginator-page-enabled {
+  color: #333333;
+  background: transparent;
+}
+
+.custom-paginator-page-disabled {
+  background-color: #007cbe;
+  color: #fff;
+}
+
+.custom-paginator-arrow-disabled {
+  color: #dfe3e6;
+}
+
+.custom-paginator-arrow-enabled {
+  color: #999999;
+}
