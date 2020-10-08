@@ -20,12 +20,13 @@ body {
 .custom-paginator-page {
   border-radius: 4px;
   border: none;
-  margin: 1%;
+  margin: 0.4em;
   font-size: 14px;
   min-width: 24px;
+  width: auto;
   min-height: 24px;
   max-height: 24px;
-  padding: unset;
+  padding: 1px 6px;
 }
 
 .custom-paginator-page-enabled {

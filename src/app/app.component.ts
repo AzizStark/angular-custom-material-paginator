@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {PageEvent} from '@angular/material/paginator';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
       // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
       // Add 'implements OnInit' to the class.
-      this.getData(0, 10);
+      this.getPageDetails();
      // this.getPageDetails();
     }
 
@@ -39,7 +38,7 @@ export class AppComponent implements OnInit {
     getPageDetails = () => {
       this.getPageSize().subscribe( res => {
         this.paginationInfo = res;
-        console.log(this.paginationInfo);
+        this.getData(0, this.paginationInfo.pageSize);
       });
     }
 
