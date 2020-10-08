@@ -44,8 +44,11 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
   ngDoCheck(): void {
     // Reset paginator if the pageSize or length changes
     if (this.matPag?.length !== this.checkPage[0] || this.matPag?.pageSize !== this.checkPage[1]) {
-      this.currentPage = 1;
-      this.matPag.pageIndex = 0;
+      const pageCount = this.matPag.getNumberOfPages();
+      if (this.currentPage > pageCount && pageCount !== 0) {
+        this.currentPage = 1;
+        this.matPag.pageIndex = 0;
+      }
       this.initPageRange();
       this.checkPage[0] = this.matPag.length;
       this.checkPage[1] = this.matPag.pageSize;
@@ -168,7 +171,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
 
   private createButton(index: any, pageIndex: number): any {
     const linkBtn: MatButton = this.renderer.createElement('button');
-    this.renderer.setAttribute( linkBtn, 'class', 'custom-paginator-page');
+    this.renderer.setAttribute(linkBtn, 'class', 'custom-paginator-page');
     this.renderer.addClass(linkBtn, 'custom-paginator-page-enabled');
     if (index === this.pageGapTxt[0] || index === this.pageGapTxt[1]) {
       this.renderer.addClass(linkBtn, 'custom-paginator-arrow-enabled');
