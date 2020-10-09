@@ -9,6 +9,7 @@ import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { PaginatorDirective } from './pagination.directive';
 import { HttpClientModule } from '@angular/common/http';
 import {MatTableModule} from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {MatTableModule} from '@angular/material/table';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     MatFormFieldModule,
     MatPaginatorModule,

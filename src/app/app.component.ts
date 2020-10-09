@@ -13,6 +13,19 @@ export class AppComponent implements OnInit {
     paginationInfo;
     pageSizeOptions: number[] = [5, 10, 25, 100];
 
+
+    // Test states
+    EmitResult = {
+      pageNumber: '',
+      pageSize: ''
+    };
+
+    testPaginator = {
+      length: 1000,
+      pageSize: 10
+    };
+
+
     // states
     tableData;
     constructor(private httpClient: HttpClient) {
@@ -33,6 +46,13 @@ export class AppComponent implements OnInit {
 
     onPageEvent = ($event) => {
       this.getData($event.pageIndex, $event.pageSize);
+    }
+
+    showTestEmit = ($event) => {
+      this.EmitResult =  {
+        pageNumber: $event.pageIndex,
+        pageSize: $event.pageSize
+      };
     }
 
     getPageDetails = () => {
