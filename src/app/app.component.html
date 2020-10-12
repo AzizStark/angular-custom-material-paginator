@@ -31,9 +31,10 @@
             <h1> Pagination test </h1>
             Page Size: <input [(ngModel)]="testPaginator.pageSize" type="text" placeholder="Enter Page Size" />
             Length: <input [(ngModel)]="testPaginator.length" type="text" placeholder="Enter Length">
+            Page Index: <input [(ngModel)]="testPaginator.pageIndex" type="text" placeholder="Enter Index">
         </div>
 
-        <mat-paginator appPagination [length]="testPaginator.length" [pageSize]="testPaginator.pageSize"
+        <mat-paginator appPagination [length]="testPaginator.length" [pageSize]="testPaginator.pageSize" [pageIndex]='testPaginator.pageIndex'
             [hidePageSize]='true' (page)="showTestEmit($event)">
         </mat-paginator>
         <br>
@@ -41,7 +42,7 @@
             <caption> <h2> Paginator Emitted Result </h2> </caption>
             <tr>
                 <th> PageSize </th>
-                <th> Page number </th>
+                <th> Page Index </th>
             </tr>
             <tr>
                 <td> {{ EmitResult.pageSize }} </td>

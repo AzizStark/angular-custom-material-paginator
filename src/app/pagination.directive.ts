@@ -54,7 +54,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
         this.currentPage = 1;
         this.matPag.pageIndex = 0;
       }
-      this.initPageRange();
+      this.switchPage(this.matPag.pageIndex);
       this.checkPage = [this.matPag.length, this.matPag.pageSize, this.matPag.pageIndex];
     }
   }
@@ -117,11 +117,13 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
 
     dots = [false, false];
 
-    this.renderer.insertBefore(
-      actionContainer,
-      this.createButton(0, this.matPag.pageIndex),
-      nextPageNode
-    );
+    if (totalPages !== 0) {
+      this.renderer.insertBefore(
+        actionContainer,
+        this.createButton(0, this.matPag.pageIndex),
+        nextPageNode
+      );
+    }
 
     page = this.showTotalPages + 2;
     pageDifference = totalPages - page;
@@ -161,7 +163,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
       }
     }
 
-    if (totalPages !== 1 && this.matPag.length !== 0) {
+    if (totalPages !== 1 && this.matPag.length > 0) {
       this.renderer.insertBefore(
         actionContainer,
         this.createButton(totalPages - 1, this.matPag.pageIndex),
@@ -186,6 +188,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     switch (index) {
       case pageIndex:
         this.renderer.setAttribute(linkBtn, 'disabled', 'disabled');
+        this.renderer.removeClass(linkBtn, 'custom-paginator-page-enabled');
         this.renderer.addClass(linkBtn, 'custom-paginator-page-disabled');
         break;
       case this.pageGapTxt[0]:

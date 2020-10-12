@@ -22,7 +22,8 @@ export class AppComponent implements OnInit {
 
     testPaginator = {
       length: 1000,
-      pageSize: 10
+      pageSize: 10,
+      pageIndex: 1
     };
 
 
