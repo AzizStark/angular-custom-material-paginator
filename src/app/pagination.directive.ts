@@ -109,8 +109,6 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
             ) {
               this.renderer.addClass(node, 'custom-paginator-arrow-enabled');
               this.renderer.removeClass(node, 'custom-paginator-arrow-disabled');
-            } else if (node.disabled) {
-              this.renderer.addClass(node, 'custom-paginator-page-disabled');
             }
           }
         }
@@ -188,6 +186,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     switch (index) {
       case pageIndex:
         this.renderer.setAttribute(linkBtn, 'disabled', 'disabled');
+        this.renderer.addClass(linkBtn, 'custom-paginator-page-disabled');
         break;
       case this.pageGapTxt[0]:
         this.renderer.listen(linkBtn, 'click', () => {
