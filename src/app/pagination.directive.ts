@@ -120,7 +120,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     if (totalPages !== 0) {
       this.renderer.insertBefore(
         actionContainer,
-        this.createButton(0, this.matPag.pageIndex),
+        this.createButton('0', this.matPag.pageIndex),
         nextPageNode
       );
     }
@@ -139,7 +139,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
       ) {
         this.renderer.insertBefore(
           actionContainer,
-          this.createButton(index, this.matPag.pageIndex),
+          this.createButton(`${index}`, this.matPag.pageIndex),
           nextPageNode
         );
       } else {
@@ -166,27 +166,24 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     if (totalPages !== 1 && this.matPag.length > 0) {
       this.renderer.insertBefore(
         actionContainer,
-        this.createButton(totalPages - 1, this.matPag.pageIndex),
+        this.createButton(`${totalPages - 1}`, this.matPag.pageIndex),
         nextPageNode
       );
     }
   }
 
-  private createButton(index: any, pageIndex: number): any {
+  private createButton(index: string, pageIndex: number): MatButton {
     const linkBtn: MatButton = this.renderer.createElement('button');
     this.renderer.setAttribute(linkBtn, 'class', 'custom-paginator-page');
     this.renderer.addClass(linkBtn, 'custom-paginator-page-enabled');
     if (index === this.pageGapTxt[0] || index === this.pageGapTxt[1]) {
       this.renderer.addClass(linkBtn, 'custom-paginator-arrow-enabled');
     }
-
-    const pagingTxt = isNaN(index) ? this.pageGapTxt[0] : +(index + 1);
+    const pagingTxt = isNaN(+ index) ? this.pageGapTxt[0] : (+ index + 1);
     const text = this.renderer.createText(pagingTxt + '');
-
     this.renderer.addClass(linkBtn, 'mat-custom-page');
-
     switch (index) {
-      case pageIndex:
+      case `${pageIndex}`:
         this.renderer.setAttribute(linkBtn, 'disabled', 'disabled');
         this.renderer.removeClass(linkBtn, 'custom-paginator-page-enabled');
         this.renderer.addClass(linkBtn, 'custom-paginator-page-disabled');
@@ -203,7 +200,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
         break;
       default:
         this.renderer.listen(linkBtn, 'click', () => {
-          this.switchPage(index);
+          this.switchPage(+ index);
         });
         break;
     }
