@@ -32,7 +32,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     this.currentPage = 1;
     this.pageGapTxt = ['•••', '---'];
     this.showTotalPages = 3;
-    this.checkPage = [0, 0];
+    this.checkPage = [0, 0, 0];
     // Subscribe to rerender buttons when next page and last page button is used
     this.matPag.page.subscribe((paginator: PageEvent) => {
       this.currentPage = paginator.pageIndex;
@@ -42,16 +42,20 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
   }
 
   ngDoCheck(): void {
-    // Reset paginator if the pageSize or length changes
-    if (this.matPag?.length !== this.checkPage[0] || this.matPag?.pageSize !== this.checkPage[1]) {
+    // Reset paginator if the pageSize, pageIndex length changes
+    if (this.matPag?.length !== this.checkPage[0]
+      ||
+      this.matPag?.pageSize !== this.checkPage[1]
+      ||
+      this.matPag?.pageIndex !== this.checkPage[2]
+    ) {
       const pageCount = this.matPag.getNumberOfPages();
       if (this.currentPage > pageCount && pageCount !== 0) {
         this.currentPage = 1;
         this.matPag.pageIndex = 0;
       }
       this.initPageRange();
-      this.checkPage[0] = this.matPag.length;
-      this.checkPage[1] = this.matPag.pageSize;
+      this.checkPage = [this.matPag.length, this.matPag.pageSize, this.matPag.pageIndex];
     }
   }
 
@@ -62,7 +66,6 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     let startIndex: number;
     let totalPages: number;
     totalPages = this.matPag.getNumberOfPages();
-
     // Container div with paginator elements
     const actionContainer = this.ViewContainer.element.nativeElement.querySelector(
       'div.mat-paginator-range-actions'
