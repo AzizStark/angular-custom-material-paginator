@@ -54,7 +54,8 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
         this.currentPage = 1;
         this.matPag.pageIndex = 0;
       }
-      this.switchPage(this.matPag.pageIndex);
+      this.currentPage = this.matPag.pageIndex;
+      this.initPageRange();
       this.checkPage = [this.matPag.length, this.matPag.pageSize, this.matPag.pageIndex];
     }
   }
