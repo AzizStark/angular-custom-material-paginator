@@ -33,6 +33,14 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
     this.pageGapTxt = ['•••', '---'];
     this.showTotalPages = 3;
     this.checkPage = [0, 0, 0];
+    // Display custom range label text
+    this.matPag._intl.getRangeLabel = (page: number, pageSize: number, length: number): string => {
+      const startIndex = page * pageSize;
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return length > 0 ? 'Showing ' + (startIndex + 1) + ' – ' + endIndex + ' of ' + length + ' records' : 'Showing 0 – 0 of 0 records';
+    };
     // Subscribe to rerender buttons when next page and last page button is used
     this.matPag.page.subscribe((paginator: PageEvent) => {
       this.currentPage = paginator.pageIndex;
@@ -118,7 +126,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
 
     dots = [false, false];
 
-    if (totalPages !== 0) {
+    if (totalPages > 0) {
       this.renderer.insertBefore(
         actionContainer,
         this.createButton('0', this.matPag.pageIndex),
@@ -132,7 +140,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
 
     for (let index = startIndex; index < totalPages - 1; index = index + 1) {
       if (
-        (index < page && this.currentPage < this.showTotalPages)
+        (index < page && this.currentPage <= this.showTotalPages)
         ||
         (index >= this.rangeStart && index <= this.rangeEnd)
         ||
@@ -164,7 +172,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
       }
     }
 
-    if (totalPages !== 1 && this.matPag.length > 0) {
+    if (totalPages > 1) {
       this.renderer.insertBefore(
         actionContainer,
         this.createButton(`${totalPages - 1}`, this.matPag.pageIndex),
