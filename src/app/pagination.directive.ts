@@ -26,8 +26,8 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
 
   constructor(
     @Host() @Self() @Optional() private readonly matPag: MatPaginator,
-    private ViewContainer: ViewContainerRef,
-    private renderer: Renderer2
+    private readonly ViewContainer: ViewContainerRef,
+    private readonly renderer: Renderer2
   ) {
     this.currentPage = 1;
     this.pageGapTxt = ['•••', '---'];
@@ -50,7 +50,7 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
   }
 
   ngDoCheck(): void {
-    // Reset paginator if the pageSize, pageIndex length changes
+    // Reset paginator if the pageSize, pageIndex, length changes
     if (this.matPag?.length !== this.checkPage[0]
       ||
       this.matPag?.pageSize !== this.checkPage[1]
@@ -145,6 +145,8 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
         (index >= this.rangeStart && index <= this.rangeEnd)
         ||
         (this.currentPage > pageDifference && index >= pageDifference)
+        ||
+        (totalPages < this.showTotalPages + page)
       ) {
         this.renderer.insertBefore(
           actionContainer,
@@ -199,12 +201,18 @@ export class PaginatorDirective implements DoCheck, AfterViewInit {
         break;
       case this.pageGapTxt[0]:
         this.renderer.listen(linkBtn, 'click', () => {
-          this.switchPage(this.currentPage + this.showTotalPages);
+          this.switchPage(this.currentPage < this.showTotalPages + 1
+             ? this.showTotalPages + 2
+            : this.currentPage + this.showTotalPages - 1
+          );
         });
         break;
       case this.pageGapTxt[1]:
         this.renderer.listen(linkBtn, 'click', () => {
-          this.switchPage(this.currentPage - this.showTotalPages);
+          this.switchPage(this.currentPage > this.matPag.getNumberOfPages() - this.showTotalPages - 2
+            ? this.matPag.getNumberOfPages() - this.showTotalPages - 3
+            : this.currentPage - this.showTotalPages + 1
+          );
         });
         break;
       default:

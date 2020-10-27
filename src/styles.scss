@@ -15,11 +15,12 @@ body {
 
 .custom-paginator-counter {
   white-space: nowrap;
+  margin: 0px 4px 0px 10px !important;
 }
 
 .custom-paginator-page {
-  cursor: pointer;
   border-radius: 4px;
+  outline: none;
   border: none;
   margin: 0.4em;
   font-size: 14px;
@@ -33,6 +34,7 @@ body {
 .custom-paginator-page-enabled {
   color: #333333;
   background: transparent;
+  cursor: pointer;
   &:hover {
     background-color: #dfe3e6;
   }

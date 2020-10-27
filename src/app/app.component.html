@@ -28,18 +28,20 @@
 
     <div class="pg-container">
         <div>
-            <h1> Pagination test </h1>
+            <h1> Paginator </h1>
             Page Size: <input [(ngModel)]="testPaginator.pageSize" type="text" placeholder="Enter Page Size" />
             Length: <input [(ngModel)]="testPaginator.length" type="text" placeholder="Enter Length">
             Page Index: <input [(ngModel)]="testPaginator.pageIndex" type="text" placeholder="Enter Index">
         </div>
 
-        <mat-paginator appPagination [length]="testPaginator.length" [pageSize]="testPaginator.pageSize" [pageIndex]='testPaginator.pageIndex'
-            [hidePageSize]='true' (page)="showTestEmit($event)">
+        <mat-paginator appPagination [length]="testPaginator.length" [pageSize]="testPaginator.pageSize"
+            [pageIndex]='testPaginator.pageIndex' [hidePageSize]='true' (page)="showTestEmit($event)">
         </mat-paginator>
         <br>
         <table style="width: 300px;">
-            <caption> <h2> Paginator Emitted Result </h2> </caption>
+            <caption>
+                <h2> Paginator Emitted Result </h2>
+            </caption>
             <tr>
                 <th> PageSize </th>
                 <th> Page Index </th>
@@ -50,47 +52,4 @@
             </tr>
         </table>
         <br>
-        <h2> Test Cases </h2>
-        <pre>
-            ⬤ Should remove the two dotted skip buttons when TotalPages is less than 6.
-                <strong>WHEN pageSize <= 6
-                EXPECT Dotted lines buttons should not appear</strong><hr>
-            ⬤ Should disable the previous button and button [1] must be highlighted and disabled when current page is 1.
-                <strong>WHEN for (e.g) CurrentPage = 1
-                EXPECT PageButton [1] must be highlighted and disabled and also previous page button must be disabled</strong><hr>
-            ⬤ Should disable the next button and lastPage button must be highlighted and disabled when current page is the last page.
-                <strong>WHEN current for (e.g) CurrentPage = 100 and totalPages = 100
-                EXPECT PageButton [100] must be highlighted and disabled and previous page button must be disabled</strong><hr>
-            ⬤ Should not display the second dotted skip button when current page is not lesser than [Page count - 3].
-                <strong>WHEN for (e.g) totalPages = 100 and currentPage >= 97
-                EXPECT Second dotted skip button should not appear</strong><hr>
-            ⬤ Should not display the first dotted skip button when current page is not greater than 3].
-                <strong>WHEN for (e.g) totalPages = 100 and currentPage <= 3
-                EXPECT First dotted skip button should not appear</strong><hr>
-            ⬤ Should highlight the current page button and it must be disabled.
-                <strong>WHEN for (e.g) currentPage=5
-                EXPECT It must be highlighted and disabled</strong><hr>
-            ⬤ Should show total page count by the division of [Length by PageSize].
-                <strong>WHEN for (e.g) Length = 1000 and pageSize = 10
-                EXPECT total pages must be 100</strong><hr>
-            ⬤ Should emit current page value like an array index starting from 0 [Current page - 1].
-                <strong>WHEN for (e.g) pageButton 5 is clicked
-                EXPECT PageNumber 4 must be emitted</strong><hr>
-            ⬤ Should emit current PageSize value.
-                <strong>WHEN for(e.g) pageSize is = 10 and if any page is clicked
-                EXPECT PageSize 10 must be emitted</strong><hr>
-            ⬤ Should show second dotted skip pages button before total pages button when page count is larger than 6.
-                <strong>WHEN Totalpages is > 6
-                EXPECT second dotted skip button must be shown before the lastpage button</strong><hr>
-            ⬤ Should show first dotted skip pages button after page button 1 when current page is greater than 3.
-                <strong>WHEN currentPage = 4
-                EXPECT first dotted skip button must be shown after the [1] first page button</strong><hr>
-            ⬤ Should skip 3 pages forward when second dotted skip page button is clicked.
-                <strong>WHEN for (e.g) currentPage = 1 and second skip button is clicked
-                EXPECT current page must me at 4 (1 + 3)</strong><hr>
-            ⬤ Should skip 3 pages backward when first dotted skip page button is clicked.
-                <strong>WHEN for (e.g) currentPage = 100 and first skip button is clicked
-                EXPECT current page must me at 97 (100 - 3)</strong><hr>
-        </pre>
     </div>
-</div>
